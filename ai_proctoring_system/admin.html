@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Monitoring</title>
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+}
+
+.card{
+background:#111827;
+padding:20px;
+border-radius:10px;
+text-align:center;
+font-size:18px;
+}
+
+.value{
+font-size:28px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.green{ color:#22c55e; }
+.red{ color:#ef4444; }
+.yellow{ color:#facc15; }
+
+</style>
+</head>
+
+<body>
+
+<h2>Admin Monitoring Panel</h2>
+
+<div class="grid">
+
+<div class="card">
+Faces
+<div class="value" id="faces">0</div>
+</div>
+
+<div class="card">
+Blinks
+<div class="value" id="blinks">0</div>
+</div>
+
+<div class="card">
+Focus
+<div class="value" id="focus">0%</div>
+</div>
+
+<div class="card">
+Gaze
+<div class="value" id="gaze">Center</div>
+</div>
+
+<div class="card">
+Status
+<div class="value" id="status">Waiting</div>
+</div>
+
+</div>
+
+<script>
+
+function update(){
+
+fetch('/stats')
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("faces").innerText = data.faces;
+document.getElementById("blinks").innerText = data.blinks;
+document.getElementById("focus").innerText = data.focus + "%";
+document.getElementById("gaze").innerText = data.gaze;
+
+let statusEl = document.getElementById("status");
+statusEl.innerText = data.status;
+
+// color logic
+statusEl.classList.remove("green","red","yellow");
+
+if(data.status == "Focused"){
+    statusEl.classList.add("green");
+}
+else if(data.status == "Drowsy" || data.status == "Multiple Faces"){
+    statusEl.classList.add("red");
+}
+else{
+    statusEl.classList.add("yellow");
+}
+
+});
+
+}
+
+setInterval(update,1000);
+
+</script>
+
+</body>
+</html>

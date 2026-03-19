@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Proctoring Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#020617);
+color:white;
+}
+
+/* HEADER */
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 25px;
+background:#111827;
+border-bottom:1px solid #1f2937;
+}
+
+.user{
+font-size:14px;
+color:#94a3b8;
+}
+
+/* 🔴 REC */
+.rec{
+display:flex;
+align-items:center;
+gap:6px;
+background:rgba(255,0,0,0.1);
+padding:5px 10px;
+border-radius:20px;
+color:#ef4444;
+font-weight:bold;
+font-size:13px;
+}
+
+.dot{
+width:10px;
+height:10px;
+background:#ef4444;
+border-radius:50%;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%,100%{opacity:1;}
+50%{opacity:0.3;}
+}
+
+/* ⏱ TIMER */
+.timer{
+background:#1e293b;
+padding:5px 12px;
+border-radius:8px;
+font-size:14px;
+color:#22c55e;
+font-weight:bold;
+}
+
+/* MAIN */
+.container{
+display:flex;
+gap:20px;
+padding:20px;
+}
+
+/* VIDEO */
+.video{
+flex:2;
+background:#020617;
+border-radius:15px;
+padding:15px;
+}
+
+.video img{
+width:100%;
+border-radius:10px;
+}
+
+/* PANEL */
+.panel{
+flex:1;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+/* CARD */
+.card{
+background:#111827;
+padding:15px;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+}
+
+.green{border-left:5px solid #22c55e;}
+.red{border-left:5px solid #ef4444;}
+.yellow{border-left:5px solid #facc15;}
+
+button{
+padding:10px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h2>AI Proctoring Dashboard</h2>
+
+<div style="display:flex;align-items:center;gap:15px;">
+
+<div class="rec">
+<span class="dot"></span> REC
+</div>
+
+<div class="timer" id="timer">00:00:00</div>
+
+<div class="user">👤 {{student.name}}</div>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="video">
+<img src="{{ url_for('video') }}">
+</div>
+
+<div class="panel">
+
+<div class="card">
+Faces <span id="faces">0</span>
+</div>
+
+<div class="card">
+Blinks <span id="blinks">0</span>
+</div>
+
+<div class="card">
+Focus <span id="focus">0%</span>
+</div>
+
+<div class="card">
+Gaze <span id="gaze">Center</span>
+</div>
+
+<div class="card" id="statusCard">
+Status <span id="status">Waiting</span>
+</div>
+
+<button onclick="downloadReport()">Export Report</button>
+
+</div>
+
+</div>
+
+<script>
+
+let seconds = 0;
+
+async function updateAll(){
+
+try{
+
+// Stats
+let res = await fetch("/stats");
+let data = await res.json();
+
+document.getElementById("faces").innerText = data.faces;
+document.getElementById("blinks").innerText = data.blinks;
+document.getElementById("focus").innerText = data.focus + "%";
+document.getElementById("gaze").innerText = data.gaze;
+document.getElementById("status").innerText = data.status;
+
+// Status color
+let card = document.getElementById("statusCard");
+card.classList.remove("green","red","yellow");
+
+if(data.status == "Focused"){
+card.classList.add("green");
+}
+else if(data.status == "Drowsy" || data.status == "Multiple Faces"){
+card.classList.add("red");
+}
+else{
+card.classList.add("yellow");
+}
+
+// Timer
+seconds++;
+
+let hrs = String(Math.floor(seconds / 3600)).padStart(2,'0');
+let mins = String(Math.floor((seconds % 3600) / 60)).padStart(2,'0');
+let secs = String(seconds % 60).padStart(2,'0');
+
+document.getElementById("timer").innerText = hrs + ":" + mins + ":" + secs;
+
+}catch(err){
+console.log(err);
+}
+
+}
+
+setInterval(updateAll,1000);
+
+function downloadReport(){
+window.location="/export";
+}
+
+</script>
+
+</body>
+</html>

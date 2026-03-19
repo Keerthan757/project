@@ -1,0 +1,21 @@
+<h2>Admin Panel</h2>
+
+<p>Faces: <span id="faces"></span></p>
+<p>Blinks: <span id="blinks"></span></p>
+<p>Focus: <span id="focus"></span></p>
+<p>Gaze: <span id="gaze"></span></p>
+<p>Status: <span id="status"></span></p>
+
+<script>
+setInterval(()=>{
+fetch('/stats')
+.then(res=>res.json())
+.then(data=>{
+document.getElementById('faces').innerText=data.faces;
+document.getElementById('blinks').innerText=data.blinks;
+document.getElementById('focus').innerText=data.focus+"%";
+document.getElementById('gaze').innerText=data.gaze;
+document.getElementById('status').innerText=data.status;
+});
+},1000);
+</script>

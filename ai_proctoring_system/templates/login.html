@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Proctoring Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* 🌈 Animated Background */
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(270deg,#0f172a,#020617,#1e293b,#0f172a);
+background-size:400% 400%;
+animation:gradientBG 10s ease infinite;
+color:white;
+}
+
+@keyframes gradientBG{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* 💎 Glass Card */
+.login-box{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,0.1);
+padding:30px;
+border-radius:20px;
+width:340px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+
+/* ✨ Entry animation */
+animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+h2{
+margin-bottom:20px;
+letter-spacing:1px;
+}
+
+/* INPUT */
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.08);
+color:white;
+outline:none;
+transition:0.3s;
+}
+
+/* ✨ Input Animation */
+input:focus{
+background:rgba(255,255,255,0.15);
+transform:scale(1.05);
+box-shadow:0 0 10px #3b82f6;
+}
+
+/* PASSWORD BOX */
+.password-box{
+position:relative;
+}
+
+#eye{
+position:absolute;
+right:10px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+}
+
+/* BUTTON */
+button{
+width:100%;
+padding:10px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#22c55e,#4ade80);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+/* ✨ Button Animation */
+button:hover{
+transform:scale(1.08);
+box-shadow:0 0 15px #22c55e;
+}
+
+/* FLOAT EFFECT */
+.login-box:hover{
+transform:translateY(-5px);
+transition:0.3s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+<h2>🚀 AI Proctoring</h2>
+
+<form action="/start" method="POST">
+
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="regno" placeholder="Register No" required>
+<input type="email" name="email" placeholder="Email" required>
+<input type="text" name="subject" placeholder="Subject" required>
+
+<div class="password-box">
+<input type="password" id="password" name="password" placeholder="Password" required>
+<span id="eye" onclick="togglePassword()">👁️</span>
+</div>
+
+<button type="submit">Start Exam 🔥</button>
+
+</form>
+
+</div>
+
+<script>
+
+function togglePassword(){
+let pwd = document.getElementById("password");
+let eye = document.getElementById("eye");
+
+if(pwd.type === "password"){
+pwd.type = "text";
+eye.innerText = "🙈";
+}else{
+pwd.type = "password";
+eye.innerText = "👁️";
+}
+}
+
+</script>
+
+</body>
+</html>
